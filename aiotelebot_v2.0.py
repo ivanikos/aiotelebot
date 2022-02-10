@@ -18,7 +18,10 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import logging, requests, re, random
 from bs4 import BeautifulSoup
 
-bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0') #Токен тестового бота testingspamobot
+with open('token.txt') as tok:
+    t_token = tok.read().strip()
+
+bot = Bot(token=t_token) #Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
