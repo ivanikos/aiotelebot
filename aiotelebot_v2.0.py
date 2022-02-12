@@ -21,7 +21,7 @@ from bs4 import BeautifulSoup
 with open('token.txt') as tok:
     t_token = tok.read().strip()
 
-bot = Bot(token=t_token) #Токен тестового бота testingspamobot
+bot = Bot(token=t_token)  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
@@ -37,6 +37,7 @@ boss_id = 799592984
 greet_kris = ['Кристина Николаевна', 'Кристиночка', 'Лисичка', 'Королева', 'Красавица']
 kris_id = 659386058
 
+
 @dp.message_handler(commands='start')
 async def start_using(message: types.Message):
     if message.from_user.id == 799592984:
@@ -46,16 +47,12 @@ async def start_using(message: types.Message):
         await bot.send_message(799592984, f'Кто-то нажал старт user_id - {message.from_user.id}, \n'
                                           f'user_name - {message.from_user.username}')
 
+
 @dp.message_handler()
 async def help_command(message: types.Message):
     if message.text == 'Help':
         if message.from_user.id == 799592984:
             await message.answer('Работает пока что')
-
-
-
-
-
 
 
 if __name__ == "__main__":
