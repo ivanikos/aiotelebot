@@ -1,5 +1,5 @@
 import logging
-import os
+import os, pyautogui
 
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -9,9 +9,10 @@ with open('token.txt') as tok:
     t_token = tok.read().strip()
 
 btnHlp = KeyboardButton('Help')
-btnDon = KeyboardButton('Donate')
+btnPause = KeyboardButton('Pause')
+btnSlp = KeyboardButton('Sleep')
 
-help_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False).row(btnHlp, btnDon)
+help_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False).row(btnHlp, btnPause, btnSlp)
 
 bot = Bot(token=t_token)  # Токен тестового бота testingspamobot
 
@@ -37,8 +38,10 @@ async def help_command(message: types.Message):
     if message.from_user.id == 799592984:
         if message.text == 'Help':
             await message.answer('Работает пока что')
-        elif message.text == 'Спать':
+        elif message.text == 'Sleep':
             os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+        elif message.text == 'Pause':
+            pyautogui.keyDown('SPACE')
         else:
             await message.answer('Я больше ничего не умею :(')
 
