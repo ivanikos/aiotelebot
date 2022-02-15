@@ -139,3 +139,4 @@ dmypy.json
 out
 gen
 !/token.txt
+/test.py

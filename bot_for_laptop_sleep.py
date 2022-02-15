@@ -1,5 +1,5 @@
 import logging
-import os
+import os, pyautogui
 
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -39,6 +39,8 @@ async def help_command(message: types.Message):
             await message.answer('Работает пока что')
         elif message.text == 'Спать':
             os.system("rundll32.exe powrprof.dll,SetSuspendState 0,1,0")
+        elif message.text == 'Pause':
+            pyautogui.keyDown('SPACE')
         else:
             await message.answer('Я больше ничего не умею :(')
 
