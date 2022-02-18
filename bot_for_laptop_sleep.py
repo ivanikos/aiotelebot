@@ -5,6 +5,8 @@ from aiogram import Bot, Dispatcher, types, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
+
+
 with open('token.txt') as tok:
     t_token = tok.read().strip()
 
@@ -44,7 +46,6 @@ async def help_command(message: types.Message):
             pyautogui.keyDown('SPACE')
         else:
             await message.answer('Я больше ничего не умею :(')
-
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates=True)

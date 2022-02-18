@@ -18,6 +18,10 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import logging, requests, re, random
 from bs4 import BeautifulSoup
 
+class OrderCity(StatesGroup):
+    wait_city = State()
+
+
 with open('token.txt') as tok:
     t_token = tok.read().strip()
 
@@ -37,7 +41,7 @@ boss_id = 799592984
 greet_kris = ['Кристина Николаевна', 'Кристиночка', 'Лисичка', 'Королева', 'Красавица']
 kris_id = 659386058
 
-async def get_weather(city):
+def get_weather(city):
     try:
         res = requests.get(
             f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=896831eabcb093fc849059be7ffbff60&lang=ru')
@@ -56,7 +60,7 @@ def news():
         news += f"{item.text} \n\n {str(item.get('href'))} \n\n "
     return news
 
-async def horo(sign):
+def horo(sign):
     url = f'https://horo.mail.ru/prediction/{sign}/today/'
     req = requests.get(url)
     soup = BeautifulSoup(req.text, 'lxml')
@@ -64,7 +68,7 @@ async def horo(sign):
     ans = res[0].text
     return ans
 
-async def exchange():
+def exchange():
     url = 'https://www.cbr-xml-daily.ru/daily_json.js'
     ans = requests.get(url).json()
     return ans
@@ -108,9 +112,26 @@ async def process_callback_news(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, data_news, reply_markup=help_kb)
 
 @dp.callback_query_handler(lambda c: c.data == '/weather')
-async def process_callback_weather(callback_query: types.CallbackQuery):
-    pass
+async def callback_weather(callback_query: types.CallbackQuery):
+    await bot.send_message(callback_query.from_user.id, 'Погоду в каком городе ты хотел бы узнать?')
+    await OrderCity.wait_city.set()
 
+
+async def weather_answer(message: types.Message, state: FSMContext):
+    await state.update_data(city=message)
+    city = await state.get_data()
+    data_weather = get_weather(city['city']['text'])
+    try:
+        await message.reply(f"В городе {city['city']['text']} температура {data_weather['main']['temp']} градусов, \n"
+                            f"ощущается как {data_weather['main']['feels_like']}, \n"
+                            f"{data_weather['weather'][0]['description']}, \n"
+                            f"Ветер {data_weather['wind']['speed']} м/с.")
+    except:
+        await message.reply('Извини, что-то пошло не так, попробуй ещё раз, пожалуйста.')
+    await state.finish()
+
+
+dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
 
 
 if __name__ == "__main__":
