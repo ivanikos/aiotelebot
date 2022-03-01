@@ -1,15 +1,6 @@
 # -*- coding: utf8 -*-
 
-import requests, telebot, re, os
-import time, pytube
-from multiprocessing.context import Process
-import schedule
-import random
-from bs4 import BeautifulSoup
-from telebot import types
-import cfscrape
-from lxml import html
-
+import requests, os
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -20,12 +11,13 @@ from bs4 import BeautifulSoup
 
 class OrderCity(StatesGroup):
     wait_city = State()
+    wait_sign = State()
 
+#
+# with open('token.txt') as tok:
+#     t_token = tok.read().strip()
 
-with open('token.txt') as tok:
-    t_token = tok.read().strip()
-
-bot = Bot(token=t_token)  # Токен тестового бота testingspamobot
+bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
@@ -77,7 +69,7 @@ def exchange():
 @dp.message_handler(commands='start')
 async def start_using(message: types.Message):
     if message.from_user.id == 799592984:
-        await message.answer('Приветствую. Работает 10.02.22', reply_markup=help_kb)
+        await message.answer('Приветствую. Работает 01.03.22', reply_markup=help_kb)
     else:
         await message.answer('Приветствую. Чтобы узнать что я умею нажми Help', reply_markup=help_kb)
         await bot.send_message(799592984, f'Кто-то нажал старт user_id - {message.from_user.id}, \n'
@@ -112,10 +104,9 @@ async def process_callback_news(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, data_news, reply_markup=help_kb)
 
 @dp.callback_query_handler(lambda c: c.data == '/weather')
-async def callback_weather(callback_query: types.CallbackQuery):
-    await bot.send_message(callback_query.from_user.id, 'Погоду в каком городе ты хотел бы узнать?')
-    await OrderCity.wait_city.set()
-
+async def callback_horo(callback_query: types.CallbackQuery):
+    await bot.send_message(callback_query.from_user.id, 'Погоду в каком городе хочешь узнать?')
+    await OrderCity.wait_sign.set()
 
 async def weather_answer(message: types.Message, state: FSMContext):
     await state.update_data(city=message)
@@ -130,9 +121,42 @@ async def weather_answer(message: types.Message, state: FSMContext):
         await message.reply('Извини, что-то пошло не так, попробуй ещё раз, пожалуйста.')
     await state.finish()
 
+@dp.callback_query_handler(lambda c: c.data == '/horo')
+async def callback_weather(callback_query: types.CallbackQuery):
+    btn_aries = InlineKeyboardButton('Овен', callback_data='aries')
+    btn_taurus = InlineKeyboardButton('Телец', callback_data='taurus')
+    btn_gemini = InlineKeyboardButton('Близнецы', callback_data='gemini')
+    btn_cancer = InlineKeyboardButton('Рак', callback_data='cancer')
+    btn_leo = InlineKeyboardButton('Лев', callback_data='leo')
+    btn_virgo = InlineKeyboardButton('Дева', callback_data='virgo')
+    btn_libra = InlineKeyboardButton('Весы', callback_data='libra')
+    btn_scorpio = InlineKeyboardButton('Скорпион', callback_data='scorpio')
+    btn_sagittarius = InlineKeyboardButton('Стрелец', callback_data='sagittarius')
+    btn_capricorn = InlineKeyboardButton('Козерог', callback_data='capricorn')
+    btn_aquarius = InlineKeyboardButton('Водолей', callback_data='aquarius')
+    btn_pisces = InlineKeyboardButton('Рыбы', callback_data='pisces')
+
+    horo_kb = InlineKeyboardMarkup(row_width=3).add(btn_aries, btn_taurus, btn_gemini).\
+        add(btn_cancer, btn_leo, btn_virgo).add(btn_libra, btn_scorpio, btn_sagittarius)\
+        .add(btn_capricorn, btn_aquarius, btn_pisces)
+
+    await bot.send_message(callback_query.from_user.id, 'Выбери знак зодиака: \n', reply_markup=horo_kb)
+    await OrderCity.wait_sign.set()
+
+async def horo_answer(callback_query: types.CallbackQuery, state: FSMContext):
+    await state.update_data(sign=callback_query.data)
+    sign = await state.get_data()
+    horo_sign = horo(sign['sign'])
+    try:
+        await bot.send_message(callback_query.from_user.id, horo_sign)
+        await state.finish()
+    except:
+        await bot.send_message(callback_query.from_user.id, 'Извини, что-то пошло не так, попробуй снова, пожалуйста.')
+
+
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
-
+dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates=True)
