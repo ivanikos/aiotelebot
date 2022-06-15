@@ -153,7 +153,34 @@ async def horo_answer(callback_query: types.CallbackQuery, state: FSMContext):
     except:
         await bot.send_message(callback_query.from_user.id, 'Извини, что-то пошло не так, попробуй снова, пожалуйста.')
 
+@dp.callback_query_handler(lambda c: c.data == '/horo')
+async def callback_horo(callback_query: types.CallbackQuery):
+    # '/aries - Овен \n'
+    # '/taurus - Телец \n'
+    # '/gemini - Близнецы\n'
+    # '/cancer - Рак\n'
+    # '/leo - Лев\n'
+    # '/virgo - Дева\n'
+    # '/libra - Весы\n'
+    # '/scorpio - Скорпион\n'
+    # '/sagittarius - Стрелец\n'
+    # '/capricorn - Козерог\n'
+    # '/aquarius - Водолей\n'
+    # '/pisces - Рыбы')
 
+    btn_aries = InlineKeyboardButton('Aries', 'aries')
+    horo_kb = InlineKeyboardMarkup().add(btn_aries)
+    await bot.send_message(callback_query.from_user.id, 'Выбери знак зодиака: \n', reply_markup=horo_kb)
+    await OrderCity.wait_sign.set()
+
+async def callback_horo_ans(callback_query: types.CallbackQuery, state: FSMContext):
+    await state.update_data(a=callback_query)
+    a = await state.get_data()
+    print(a)
+    print(callback_query)
+    print('зашел')
+
+dp.register_message_handler(callback_horo_ans, state=OrderCity.wait_sign)
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
 dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
