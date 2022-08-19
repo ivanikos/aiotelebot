@@ -16,7 +16,7 @@ btnSlp = KeyboardButton('Sleep')
 
 help_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False).row(btnHlp, btnPause, btnSlp)
 
-bot = Bot(token=t_token)  # Токен тестового бота testingspamobot
+bot = Bot(token=t_token)  # Токен моего тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
