@@ -55,10 +55,11 @@ async def help_command(message: types.Message):
         btn_news = InlineKeyboardButton('Новости Краснодарского края', callback_data='/news_kk')
         btn_horo = InlineKeyboardButton('Узнать свой гороскоп', callback_data='/horo')
         btn_fox = InlineKeyboardButton('Тест картинки лис', callback_data='/fox')
-        # btn_exchange = InlineKeyboardButton('Узнать курс валют', callback_data='/exchange')
+        btn_cat = InlineKeyboardButton('Тест картинки котиков', callback_data='/cat')
+
         btn_weather = InlineKeyboardButton('Узнать погоду', callback_data='/weather')
         write_kb = InlineKeyboardMarkup().add(btn_news).add(btn_horo).add(btn_weather) \
-            .add(writeBtn).add(btn_fox)
+            .add(writeBtn).add(btn_fox).add(btn_cat)
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
             f'Alpha_test. ver. 2.0, date 04.09.2022', reply_markup=help_kb)
@@ -156,6 +157,19 @@ async def send_fox():
     await bot.send_photo(boss_id, img, reply_markup=help_kb)
     api_fox_img.delete_fox_img(f'{img_name}')
 
+@dp.callback_query_handler(lambda c: c.data == '/cat')
+async def test_cat(callback_query: types.CallbackQuery):
+    img_name = api_fox_img.load_cat_img()
+    img = open(f'{img_name}', 'rb')
+    await bot.send_photo(callback_query.from_user.id, img, reply_markup=help_kb)
+    api_fox_img.delete_cat_img(f'{img_name}')
+
+async def send_cat():
+    img_name = api_fox_img.load_cat_img()
+    img = open(f'{img_name}', 'rb')
+    await bot.send_photo(boss_id, img, reply_markup=help_kb)
+    api_fox_img.delete_cat_img(f'{img_name}')
+
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
 dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
@@ -165,7 +179,7 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 # Отправка сообщений по времени
 async def scheduler():
     aioschedule.every().day.at("12:54").do(send_fox)
-    aioschedule.every().day.at("12:55").do(send_fox)
+    aioschedule.every().day.at("20:33").do(send_cat)
     aioschedule.every().day.at("12:56").do(send_fox)
     while True:
         await aioschedule.run_pending()
