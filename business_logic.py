@@ -1,15 +1,15 @@
 import requests
+import random
 from bs4 import BeautifulSoup
 
 
 def get_weather(city):
-    try:
-        res = requests.get(
-            f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=896831eabcb093fc849059be7ffbff60&lang=ru')
-        data = res.json()
-        return data
-    except:
-        return 'Извини, что-то пошло не так. Попробуй ещё раз.'
+    res = requests.get(
+        f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=896831eabcb093f'
+        f'c849059be7ffbff60&lang=ru')
+    data = res.json()
+    return data
+
 
 def news():
     news = ''
@@ -21,6 +21,7 @@ def news():
         news += f"{item.text} \n\n {str(item.get('href'))} \n\n "
     return news
 
+
 def horo(sign):
     url = f'https://horo.mail.ru/prediction/{sign}/today/'
     req = requests.get(url)
@@ -29,7 +30,20 @@ def horo(sign):
     ans = res[0].text
     return ans
 
+
 def exchange():
     url = 'https://www.cbr-xml-daily.ru/daily_json.js'
     ans = requests.get(url).json()
     return ans
+
+
+"""
+Чтение цитат из файла и возврат случайной цитаты.
+"""
+
+
+def quote_lao():
+    with open('quote_lao.txt', 'r') as f:
+        lenta = f.read().splitlines()
+    quotes = [x for x in lenta if x]
+    return quotes[random.randint(1, 289)]
