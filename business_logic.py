@@ -47,3 +47,4 @@ def quote_lao():
         lenta = f.read().splitlines()
     quotes = [x for x in lenta if x]
     return quotes[random.randint(1, 289)]
+

@@ -61,10 +61,22 @@ async def help_command(message: types.Message):
             .add(writeBtn).add(btn_fox).add(btn_cat)
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
-            f'Alpha_test. ver. 2.0, date 04.09.2022', reply_markup=help_kb)
+            f'Alpha_test. ver. 2.0, date 11.09.2022', reply_markup=help_kb)
+
+    elif message.text == 'Лисичку' or message.text == 'лисичку':
+        img_name = api_fox_img.load_fox_img()
+        img = open(f'{img_name}', 'rb')
+        await bot.send_photo(message.from_user.id, img, reply_markup=help_kb)
+        api_fox_img.delete_fox_img(f'{img_name}')
+    elif message.text == 'Котика' or message.text == 'котика':
+        img_name = api_fox_img.load_cat_img()
+        img = open(f'{img_name}', 'rb')
+        await bot.send_photo(message.from_user.id, img, reply_markup=help_kb)
+        api_fox_img.delete_cat_img(f'{img_name}')
+
     elif message.text == 'Donate':
         await message.answer('В тестовом режиме функция не работает. Жми HELP.')
-        await message.answer(f'Alpha_test. ver. 2.0, date 04.09.2022', reply_markup=help_kb)
+        await message.answer(f'Alpha_test. ver. 2.2, date 11.09.2022', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
 
@@ -172,6 +184,31 @@ async def send_cat():
     api_fox_img.delete_cat_img(f'{img_name}')
 
 
+async def morning_msg():
+    greeting = 'Доброго утра, Иван Александрович!\n'
+    data_weather = business_logic.get_weather('надым')
+    weather_msg = f"На улице температура {data_weather['main']['temp']} градусов," \
+                  f" \n ощущается как {data_weather['main']['feels_like']}," \
+                  f" \n {data_weather['weather'][0]['description']}," \
+                  f" \n Ветер {data_weather['wind']['speed']} м/с."
+
+    horo_taurus = business_logic.horo('taurus')
+    news_on_morning = business_logic.news()
+    msg_final = greeting + weather_msg + horo_taurus + '\n' + news_on_morning + '\n'
+    await bot.send_message(boss_id, msg_final)
+
+
+async def morning_msg_quote():
+    quote = business_logic.quote_lao()
+    await bot.send_message(boss_id, quote)
+
+
+async def evening_msg():
+    greeting = 'Доброй ночи, Иван Александрович!\n'
+    quote = business_logic.quote_lao()
+    await bot.send_message(boss_id, greeting + quote)
+
+
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
 dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
 dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
@@ -179,9 +216,14 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени
 async def scheduler():
-    aioschedule.every().day.at("19:00").do(send_fox)
-    aioschedule.every().day.at("19:01").do(send_cat)
-    aioschedule.every().day.at("19:02").do(send_fox)
+    aioschedule.every().day.at("06:00").do(morning_msg)
+    aioschedule.every().day.at("06:10").do(morning_msg_quote)
+    aioschedule.every().day.at("06:30").do(send_fox)
+    aioschedule.every().day.at("07:00").do(send_cat)
+    aioschedule.every().day.at("12:00").do(send_fox)
+    aioschedule.every().day.at("21:00").do(evening_msg)
+    aioschedule.every().day.at("21:02").do(send_cat)
+
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
