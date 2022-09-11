@@ -215,14 +215,13 @@ dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
 dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 
-# Отправка сообщений по времени
+# Отправка сообщений по времени. Время МСК
 async def scheduler():
     aioschedule.every().day.at("06:00").do(morning_msg)
     aioschedule.every().day.at("06:10").do(morning_msg_quote)
     aioschedule.every().day.at("06:30").do(send_fox)
     aioschedule.every().day.at("07:00").do(send_cat)
     aioschedule.every().day.at("12:00").do(send_fox)
-    aioschedule.every().day.at("21:00").do(evening_msg)
     aioschedule.every().day.at("19:00").do(evening_msg)
     aioschedule.every().day.at("21:02").do(send_cat)
 
