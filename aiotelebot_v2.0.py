@@ -18,7 +18,7 @@ class OrderCity(StatesGroup):
     wait_sign = State()
 
 
-TOKEN = os.environ.get['AIO_TOKEN']
+TOKEN = os.environ['AIO_TOKEN']
 
 bot = Bot(token=TOKEN)  # Токен тестового бота testingspamobot
 
