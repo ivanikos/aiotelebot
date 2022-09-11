@@ -18,8 +18,8 @@ class OrderCity(StatesGroup):
     wait_sign = State()
 
 
+TOKEN = os.environ.get['AIO_TOKEN']
 
-TOKEN = os.environ.get['TELETOKEN']
 bot = Bot(token=TOKEN)  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
@@ -156,12 +156,14 @@ async def send_fox():
     await bot.send_photo(boss_id, img, reply_markup=help_kb)
     api_fox_img.delete_fox_img(f'{img_name}')
 
+
 @dp.callback_query_handler(lambda c: c.data == '/cat')
 async def test_cat(callback_query: types.CallbackQuery):
     img_name = api_fox_img.load_cat_img()
     img = open(f'{img_name}', 'rb')
     await bot.send_photo(callback_query.from_user.id, img, reply_markup=help_kb)
     api_fox_img.delete_cat_img(f'{img_name}')
+
 
 async def send_cat():
     img_name = api_fox_img.load_cat_img()
