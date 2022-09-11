@@ -19,7 +19,7 @@ class OrderCity(StatesGroup):
 
 
 
-TOKEN = os.environ['TELETOKEN']
+TOKEN = os.environ.get['TELETOKEN']
 bot = Bot(token=TOKEN)  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
