@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import aioschedule
+import datetime
 import os
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher import FSMContext
@@ -17,7 +18,7 @@ class OrderCity(StatesGroup):
     wait_city = State()
     wait_sign = State()
 
-
+date_change = datetime.date.today().strftime("%d.%M.%Y")
 # TOKEN = os.environ.get['TELETOKEN']
 
 bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
@@ -39,11 +40,11 @@ kris_id = 659386058
 
 @dp.message_handler(commands='start')
 async def start_using(message: types.Message):
-    if message.from_user.id == 799592984:
-        await message.answer('Приветствую. Работает 04.09.22', reply_markup=help_kb)
+    if message.from_user.id == boss_id:
+        await message.answer(f'Приветствую. Работает {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Приветствую. Чтобы узнать что я умею нажми Help', reply_markup=help_kb)
-        await bot.send_message(799592984, f'Кто-то нажал старт user_id - {message.from_user.id}, \n'
+        await bot.send_message(boss_id, f'Кто-то нажал старт user_id - {message.from_user.id}, \n'
                                           f'user_name - {message.from_user.username}')
 
 
@@ -53,15 +54,15 @@ async def help_command(message: types.Message):
         writeBtn = InlineKeyboardButton('Написать разработчику', url='telegram.me/ivanikos')
         btn_news = InlineKeyboardButton('Новости Краснодарского края', callback_data='/news_kk')
         btn_horo = InlineKeyboardButton('Узнать свой гороскоп', callback_data='/horo')
-        btn_fox = InlineKeyboardButton('Тест картинки лис', callback_data='/fox')
-        btn_cat = InlineKeyboardButton('Тест картинки котиков', callback_data='/cat')
+        # btn_fox = InlineKeyboardButton('Тест картинки лис', callback_data='/fox')
+        # btn_cat = InlineKeyboardButton('Тест картинки котиков', callback_data='/cat')
 
         btn_weather = InlineKeyboardButton('Узнать погоду', callback_data='/weather')
         write_kb = InlineKeyboardMarkup().add(btn_news).add(btn_horo).add(btn_weather) \
-            .add(writeBtn).add(btn_fox).add(btn_cat)
+            .add(writeBtn)
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
-            f'Alpha_test. ver. 2.0, date 11.09.2022', reply_markup=help_kb)
+            f'Alpha_test. ver. 2.0, date {date_change}', reply_markup=help_kb)
 
     elif message.text == 'Лисичку' or message.text == 'лисичку':
         img_name = api_fox_img.load_fox_img()
@@ -76,7 +77,7 @@ async def help_command(message: types.Message):
 
     elif message.text == 'Donate':
         await message.answer('В тестовом режиме функция не работает. Жми HELP.')
-        await message.answer(f'Alpha_test. ver. 2.2, date 11.09.2022', reply_markup=help_kb)
+        await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
 
@@ -222,6 +223,7 @@ async def scheduler():
     aioschedule.every().day.at("07:00").do(send_cat)
     aioschedule.every().day.at("12:00").do(send_fox)
     aioschedule.every().day.at("21:00").do(evening_msg)
+    aioschedule.every().day.at("19:00").do(evening_msg)
     aioschedule.every().day.at("21:02").do(send_cat)
 
     while True:
