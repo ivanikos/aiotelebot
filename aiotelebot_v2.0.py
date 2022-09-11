@@ -201,7 +201,7 @@ async def morning_msg():
 
 
 async def morning_msg_quote():
-    quote = business_logic.quote_lao()
+    quote = str(business_logic.quote_lao())
     await bot.send_message(boss_id, quote)
 
 
@@ -219,7 +219,7 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 # Отправка сообщений по времени. Время МСК
 async def scheduler():
     aioschedule.every().day.at("06:30").do(morning_msg)
-    aioschedule.every().day.at("06:31").do(morning_msg_quote)
+    aioschedule.every().day.at("06:37").do(morning_msg_quote)
     aioschedule.every().day.at("06:32").do(send_fox)
     aioschedule.every().day.at("06:33").do(send_cat)
     aioschedule.every().day.at("10:00").do(send_fox)
