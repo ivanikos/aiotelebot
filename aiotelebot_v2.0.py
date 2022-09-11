@@ -18,9 +18,9 @@ class OrderCity(StatesGroup):
     wait_sign = State()
 
 
-TOKEN = os.environ['AIO_TOKEN']
+# TOKEN = os.environ.get['TELETOKEN']
 
-bot = Bot(token=TOKEN)  # Токен тестового бота testingspamobot
+bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
