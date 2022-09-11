@@ -186,7 +186,7 @@ async def send_cat():
 
 
 async def morning_msg():
-    greeting = 'Доброго утра, Иван Александрович!\n'
+    greeting = 'Доброго утра, Иван Александрович!\n\n'
     data_weather = business_logic.get_weather('надым')
     weather_msg = f"На улице температура {data_weather['main']['temp']} градусов," \
                   f" \n ощущается как {data_weather['main']['feels_like']}," \
@@ -195,7 +195,8 @@ async def morning_msg():
 
     horo_taurus = business_logic.horo('taurus')
     news_on_morning = business_logic.news()
-    msg_final = greeting + weather_msg + horo_taurus + '\n' + news_on_morning + '\n'
+    msg_final = greeting + 'Погода ' + weather_msg + '\n\nТвой гороскоп на сегодня:\n' + horo_taurus + \
+                '\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
     await bot.send_message(boss_id, msg_final)
 
 
@@ -217,13 +218,13 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени. Время МСК
 async def scheduler():
-    aioschedule.every().day.at("06:00").do(morning_msg)
-    aioschedule.every().day.at("06:10").do(morning_msg_quote)
-    aioschedule.every().day.at("06:30").do(send_fox)
-    aioschedule.every().day.at("07:00").do(send_cat)
+    aioschedule.every().day.at("06:10").do(morning_msg)
+    aioschedule.every().day.at("06:11").do(morning_msg_quote)
+    aioschedule.every().day.at("06:12").do(send_fox)
+    aioschedule.every().day.at("06:13").do(send_cat)
     aioschedule.every().day.at("12:00").do(send_fox)
-    aioschedule.every().day.at("19:00").do(evening_msg)
-    aioschedule.every().day.at("21:02").do(send_cat)
+    aioschedule.every().day.at("06:14").do(evening_msg)
+    aioschedule.every().day.at("19:02").do(send_cat)
 
     while True:
         await aioschedule.run_pending()
