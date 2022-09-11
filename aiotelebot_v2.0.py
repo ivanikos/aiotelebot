@@ -179,9 +179,9 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени
 async def scheduler():
-    aioschedule.every().day.at("09:10").do(send_fox)
-    aioschedule.every().day.at("09:11").do(send_cat)
-    aioschedule.every().day.at("09:12").do(send_fox)
+    aioschedule.every().day.at("19:00").do(send_fox)
+    aioschedule.every().day.at("19:01").do(send_cat)
+    aioschedule.every().day.at("19:02").do(send_fox)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
