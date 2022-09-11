@@ -2,7 +2,7 @@
 import asyncio
 import logging
 import aioschedule
-
+import os
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -18,10 +18,9 @@ class OrderCity(StatesGroup):
     wait_sign = State()
 
 
-# with open('token.txt') as tok:
-#     t_token = tok.read().strip()
 
-bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
+TOKEN = os.environ['TELETOKEN']
+bot = Bot(token=TOKEN)  # Токен тестового бота testingspamobot
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
@@ -178,9 +177,9 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени
 async def scheduler():
-    aioschedule.every().day.at("12:54").do(send_fox)
-    aioschedule.every().day.at("20:33").do(send_cat)
-    aioschedule.every().day.at("12:56").do(send_fox)
+    aioschedule.every().day.at("09:10").do(send_fox)
+    aioschedule.every().day.at("09:11").do(send_cat)
+    aioschedule.every().day.at("09:12").do(send_fox)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
