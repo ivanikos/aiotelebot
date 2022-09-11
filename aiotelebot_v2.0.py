@@ -207,7 +207,7 @@ async def morning_msg_quote():
 
 async def evening_msg():
     greeting = 'Доброй ночи, Иван Александрович!\n'
-    quote = business_logic.quote_lao()
+    quote = str(business_logic.quote_lao())
     await bot.send_message(boss_id, greeting + quote)
 
 
