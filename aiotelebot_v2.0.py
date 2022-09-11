@@ -18,7 +18,7 @@ class OrderCity(StatesGroup):
     wait_city = State()
     wait_sign = State()
 
-date_change = datetime.date.today().strftime("%d.%M.%Y")
+date_change = datetime.date.today().strftime("%d.%m.%Y")
 # TOKEN = os.environ.get['TELETOKEN']
 
 bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
