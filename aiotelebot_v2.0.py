@@ -188,6 +188,18 @@ async def send_cat():
     api_fox_img.delete_cat_img(f'{img_name}')
 
 
+async def send_fox_kris():
+    img_name = api_fox_img.load_fox_img()
+    img = open(f'{img_name}', 'rb')
+    await bot.send_photo(kris_id, img, reply_markup=help_kb)
+    api_fox_img.delete_fox_img(f'{img_name}')
+
+async def send_cat_kris():
+    img_name = api_fox_img.load_cat_img()
+    img = open(f'{img_name}', 'rb')
+    await bot.send_photo(kris_id, img, reply_markup=help_kb)
+    api_fox_img.delete_cat_img(f'{img_name}')
+
 async def morning_msg():
     greeting = 'Доброго утра, Иван Александрович!\n\n'
     data_weather = business_logic.get_weather('надым')
@@ -232,7 +244,7 @@ async def evening_msg():
 async def evening_msg_kris():
     greeting = 'Доброй ночи, Кристиночка!\n\n'
     quote = business_logic.quote_lao()
-    await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
+    await bot.send_message(kris_id, greeting + quote + '\n\n Лао-цзы')
 
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
@@ -253,12 +265,12 @@ async def scheduler():
 
     # Автосообщения Кристине
     aioschedule.every().day.at("01:00").do(morning_msg_kris)
-    aioschedule.every().day.at("01:02").do(morning_msg_quote)
-    aioschedule.every().day.at("03:00").do(send_fox)
-    aioschedule.every().day.at("06:30").do(send_cat)
-    aioschedule.every().day.at("11:30").do(send_fox)
-    aioschedule.every().day.at("16:00").do(evening_msg_kris)
-    aioschedule.every().day.at("16:01").do(send_cat)
+    aioschedule.every().day.at("01:02").do(morning_msg_quote_kris)
+    aioschedule.every().day.at("03:00").do(send_fox_kris)
+    aioschedule.every().day.at("06:30").do(send_cat_kris)
+    aioschedule.every().day.at("11:30").do(send_fox_kris)
+    aioschedule.every().day.at("16:30").do(evening_msg_kris)
+    aioschedule.every().day.at("16:31").do(send_cat_kris)
 
 
 
