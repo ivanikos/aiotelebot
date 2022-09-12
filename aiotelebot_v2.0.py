@@ -21,7 +21,7 @@ class OrderCity(StatesGroup):
 date_change = datetime.date.today().strftime("%d.%m.%Y")
 # TOKEN = os.environ.get['TELETOKEN']
 
-bot = Bot(token='1097747087:AAG_GpsWo1Loj_0dfeF0EStQUEYwGH4xjI0')  # Токен тестового бота testingspamobot
+bot = Bot(token='1265062548:AAFqYKSGzXqCmAANEPfEN02SGj69rs9PLPA')
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
@@ -63,6 +63,9 @@ async def help_command(message: types.Message):
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
             f'Alpha_test. ver. 2.0, date {date_change}', reply_markup=help_kb)
+        if message.from_user.id == kris_id or message.from_user.id == boss_id:
+            await message.answer('Если напишешь мне в любой момент "Лисичку" или "Котика", пришлю тебе фото,'
+                                 ' чтобы ты улыбнулась!')
 
     elif message.text == 'Лисичку' or message.text == 'лисичку':
         img_name = api_fox_img.load_fox_img()
@@ -76,8 +79,8 @@ async def help_command(message: types.Message):
         api_fox_img.delete_cat_img(f'{img_name}')
 
     elif message.text == 'Donate':
-        await message.answer('В тестовом режиме функция не работает. Жми HELP.')
-        await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
+        await message.answer('Просто кнопка, ничего не делает. Жми HELP.')
+        # await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
 
@@ -196,19 +199,40 @@ async def morning_msg():
     horo_taurus = business_logic.horo('taurus')
     news_on_morning = business_logic.news()
     msg_final = greeting + 'Погода ' + weather_msg + '\n\nТвой гороскоп на сегодня:\n' + horo_taurus + \
-                '\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
+                '\n\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
     await bot.send_message(boss_id, msg_final)
 
+async def morning_msg_kris():
+    greeting = 'Доброго утра, Кристиночка!\n\n'
+    data_weather = business_logic.get_weather('Свободный')
+    weather_msg = f"На улице температура {data_weather['main']['temp']} градусов," \
+                  f" \n ощущается как {data_weather['main']['feels_like']}," \
+                  f" \n {data_weather['weather'][0]['description']}," \
+                  f" \n Ветер {data_weather['wind']['speed']} м/с."
+
+    horo_taurus = business_logic.horo('taurus')
+    news_on_morning = business_logic.news()
+    msg_final = greeting + 'Погода ' + weather_msg + '\n\nТвой гороскоп на сегодня:\n' + horo_taurus + \
+                '\n\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
+    await bot.send_message(kris_id, msg_final)
 
 async def morning_msg_quote():
     quote = business_logic.quote_lao()
-    await bot.send_message(boss_id, quote)
+    await bot.send_message(boss_id, quote + '\n\n Лао-цзы')
+async def morning_msg_quote_kris():
+    quote = business_logic.quote_lao()
+    await bot.send_message(kris_id, quote + '\n\n Лао-цзы')
 
 
 async def evening_msg():
-    greeting = 'Доброй ночи, Иван Александрович!\n'
+    greeting = 'Доброй ночи, Иван Александрович!\n\n'
     quote = business_logic.quote_lao()
-    await bot.send_message(boss_id, greeting + quote)
+    await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
+
+async def evening_msg_kris():
+    greeting = 'Доброй ночи, Кристиночка!\n\n'
+    quote = business_logic.quote_lao()
+    await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
 
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
@@ -218,6 +242,7 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени. Время МСК
 async def scheduler():
+    # Мои автосообщения
     aioschedule.every().day.at("04:10").do(morning_msg)
     aioschedule.every().day.at("04:12").do(morning_msg_quote)
     aioschedule.every().day.at("06:00").do(send_fox)
@@ -226,8 +251,15 @@ async def scheduler():
     aioschedule.every().day.at("19:30").do(evening_msg)
     aioschedule.every().day.at("19:32").do(send_cat)
 
-    aioschedule.every().day.at("11:33").do(evening_msg)
-    aioschedule.every().day.at("11:34").do(morning_msg_quote)
+    # Автосообщения Кристине
+    aioschedule.every().day.at("01:00").do(morning_msg_kris)
+    aioschedule.every().day.at("01:02").do(morning_msg_quote)
+    aioschedule.every().day.at("03:00").do(send_fox)
+    aioschedule.every().day.at("06:30").do(send_cat)
+    aioschedule.every().day.at("11:30").do(send_fox)
+    aioschedule.every().day.at("16:00").do(evening_msg_kris)
+    aioschedule.every().day.at("16:01").do(send_cat)
+
 
 
     while True:
