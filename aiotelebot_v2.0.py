@@ -201,13 +201,13 @@ async def morning_msg():
 
 
 async def morning_msg_quote():
-    quote = str(business_logic.quote_lao())
+    quote = business_logic.quote_lao()
     await bot.send_message(boss_id, quote)
 
 
 async def evening_msg():
     greeting = 'Доброй ночи, Иван Александрович!\n'
-    quote = str(business_logic.quote_lao())
+    quote = business_logic.quote_lao()
     await bot.send_message(boss_id, greeting + quote)
 
 
@@ -218,13 +218,17 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 
 # Отправка сообщений по времени. Время МСК
 async def scheduler():
-    aioschedule.every().day.at("06:30").do(morning_msg)
-    aioschedule.every().day.at("06:37").do(morning_msg_quote)
-    aioschedule.every().day.at("06:32").do(send_fox)
-    aioschedule.every().day.at("06:33").do(send_cat)
-    aioschedule.every().day.at("10:00").do(send_fox)
-    aioschedule.every().day.at("06:34").do(evening_msg)
-    aioschedule.every().day.at("19:02").do(send_cat)
+    aioschedule.every().day.at("04:10").do(morning_msg)
+    aioschedule.every().day.at("04:12").do(morning_msg_quote)
+    aioschedule.every().day.at("06:00").do(send_fox)
+    aioschedule.every().day.at("10:00").do(send_cat)
+    aioschedule.every().day.at("15:00").do(send_fox)
+    aioschedule.every().day.at("19:30").do(evening_msg)
+    aioschedule.every().day.at("19:32").do(send_cat)
+
+    aioschedule.every().day.at("11:33").do(evening_msg)
+    aioschedule.every().day.at("11:34").do(morning_msg_quote)
+
 
     while True:
         await aioschedule.run_pending()
