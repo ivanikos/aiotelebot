@@ -44,7 +44,7 @@ def exchange():
 
 
 def quote_lao():
-    with open('quote_lao.txt', 'r') as f:
+    with open('quote_lao.txt', 'r', encoding='cp1251') as f:
         lenta = f.read().splitlines()
     quotes = [x for x in lenta if x]
     return quotes[random.randint(1, 289)]
