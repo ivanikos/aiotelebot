@@ -63,7 +63,7 @@ async def help_command(message: types.Message):
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
             f'Alpha_test. ver. 2.0, date {date_change}', reply_markup=help_kb)
-        if message.from_user.id == kris_id or message.from_user.id == boss_id:
+        if message.from_user.id == kris_id:
             await message.answer('Если напишешь мне в любой момент "Лисичку" или "Котика", пришлю тебе фото,'
                                  ' чтобы ты улыбнулась!')
 
@@ -80,6 +80,8 @@ async def help_command(message: types.Message):
 
     elif message.text == 'Donate':
         await message.answer('Просто кнопка, ничего не делает. Жми HELP.')
+        quote = business_logic.quote_guber()
+        await bot.send_message(boss_id, quote + '\n\n Игорь Миронович Губерман')
         # await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
