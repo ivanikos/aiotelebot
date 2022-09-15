@@ -80,8 +80,8 @@ async def help_command(message: types.Message):
 
     elif message.text == 'Donate':
         await message.answer('Просто кнопка, ничего не делает. Жми HELP.')
-        quote = business_logic.quote_guber()
-        await bot.send_message(boss_id, quote + '\n\n Игорь Миронович Губерман')
+        quote = business_logic.quote_budda()
+        await bot.send_message(boss_id, quote)
         # await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
@@ -230,19 +230,26 @@ async def morning_msg_kris():
                 '\n\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
     await bot.send_message(kris_id, msg_final)
 
-async def morning_msg_quote():
+async def quote_lao():
     quote = business_logic.quote_lao()
-    await bot.send_message(boss_id, quote + '\n\n Лао-цзы')
-async def morning_msg_quote_kris():
+    await bot.send_message(boss_id, quote)
+async def quote_lao_kris():
     quote = business_logic.quote_lao()
-    await bot.send_message(kris_id, quote + '\n\n Лао-цзы')
+    await bot.send_message(kris_id, quote)
 
-async def morning_msg_quote_guber():
-    quote = business_logic.quote_guber()
-    await bot.send_message(boss_id, quote + '\n\n Игорь Миронович Губерман')
-async def morning_msg_quote_kris_guber():
-    quote = business_logic.quote_guber()
-    await bot.send_message(kris_id, quote + '\n\n Игорь Миронович Губерман')
+async def quote_all():
+    quote = business_logic.quote_all()
+    await bot.send_message(boss_id, quote)
+async def quote_all_kris():
+    quote = business_logic.quote_all()
+    await bot.send_message(kris_id, quote)
+
+async def quote_budda():
+    quote = business_logic.quote_budda()
+    await bot.send_message(boss_id, quote)
+async def quote_budda_kris():
+    quote = business_logic.quote_budda()
+    await bot.send_message(kris_id, quote)
 
 
 async def evening_msg():
@@ -265,23 +272,24 @@ dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
 async def scheduler():
     # Мои автосообщения
     aioschedule.every().day.at("04:10").do(morning_msg)
-    aioschedule.every().day.at("04:12").do(morning_msg_quote)
-    aioschedule.every().day.at("08:30").do(morning_msg_quote_guber)
+    aioschedule.every().day.at("04:12").do(quote_budda)
+    aioschedule.every().day.at("08:30").do(quote_all)
     aioschedule.every().day.at("06:00").do(send_fox)
     aioschedule.every().day.at("10:00").do(send_cat)
-    aioschedule.every().day.at("10:30").do(morning_msg_quote_guber)
+    aioschedule.every().day.at("10:30").do(quote_all)
     aioschedule.every().day.at("15:00").do(send_fox)
     aioschedule.every().day.at("19:30").do(evening_msg)
     aioschedule.every().day.at("19:32").do(send_cat)
 
     # Автосообщения Кристине
     aioschedule.every().day.at("01:00").do(morning_msg_kris)
-    aioschedule.every().day.at("01:02").do(morning_msg_quote_kris)
+    aioschedule.every().day.at("01:02").do(quote_budda_kris)
     aioschedule.every().day.at("03:00").do(send_fox_kris)
     aioschedule.every().day.at("06:30").do(send_cat_kris)
-    aioschedule.every().day.at("09:00").do(morning_msg_quote_kris_guber)
+    aioschedule.every().day.at("09:00").do(quote_all_kris)
     aioschedule.every().day.at("11:30").do(send_fox_kris)
     aioschedule.every().day.at("16:30").do(evening_msg_kris)
+    aioschedule.every().day.at("16:32").do(quote_budda_kris)
     aioschedule.every().day.at("16:31").do(send_cat_kris)
 
 

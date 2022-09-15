@@ -49,8 +49,12 @@ def quote_lao():
     quotes = [x for x in lenta if x]
     return quotes[random.randint(1, 289)]
 
-def quote_guber():
-    with open('quote_guber.txt', 'r', encoding='cp1251') as f:
+def quote_all():
+    with open('quotes_all.txt', 'r', encoding='cp1251') as f:
         lenta = f.read().split(';')
-    return lenta[random.randint(1, 289)]
+    return lenta[random.randint(1, 675)]
 
+def quote_budda():
+    with open('quotes_budda.txt', 'r', encoding='cp1251') as f:
+        lenta = f.read().split(';')
+    return lenta[random.randint(1, 210)]
