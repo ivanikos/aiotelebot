@@ -80,8 +80,8 @@ async def help_command(message: types.Message):
 
     elif message.text == 'Donate':
         await message.answer('Просто кнопка, ничего не делает. Жми HELP.')
-        quote = business_logic.quote_budda()
-        await bot.send_message(boss_id, quote)
+        quote = business_logic.quote_all()
+        await bot.send_message(message.from_user.id, quote)
         # await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
