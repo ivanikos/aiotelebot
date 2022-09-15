@@ -235,6 +235,13 @@ async def morning_msg_quote_kris():
     quote = business_logic.quote_lao()
     await bot.send_message(kris_id, quote + '\n\n Лао-цзы')
 
+async def morning_msg_quote_guber():
+    quote = business_logic.quote_guber()
+    await bot.send_message(boss_id, quote + '\n\n Игорь Миронович Губерман')
+async def morning_msg_quote_kris_guber():
+    quote = business_logic.quote_guber()
+    await bot.send_message(kris_id, quote + '\n\n Игорь Миронович Губерман')
+
 
 async def evening_msg():
     greeting = 'Доброй ночи, Иван Александрович!\n\n'
@@ -257,6 +264,7 @@ async def scheduler():
     # Мои автосообщения
     aioschedule.every().day.at("04:10").do(morning_msg)
     aioschedule.every().day.at("04:12").do(morning_msg_quote)
+    aioschedule.every().day.at("08:30").do(morning_msg_quote_guber)
     aioschedule.every().day.at("06:00").do(send_fox)
     aioschedule.every().day.at("10:00").do(send_cat)
     aioschedule.every().day.at("15:00").do(send_fox)
