@@ -178,7 +178,7 @@ async def callback_eng_word(callback_query: types.CallbackQuery):
 
     horo_kb = InlineKeyboardMarkup(row_width=2).add(btn_random_word, btn_manual_word).add(btn_cancel)
 
-    await bot.send_message(callback_query.from_user.id, 'Хочешь узнать случайное слово или'
+    await bot.send_message(callback_query.from_user.id, 'Хочешь узнать случайное слово или '
                                                         'какое-то конкретное? \n', reply_markup=horo_kb)
     await OrderCity.wait_english.set()
 
