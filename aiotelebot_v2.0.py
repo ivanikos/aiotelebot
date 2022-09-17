@@ -64,7 +64,7 @@ async def help_command(message: types.Message):
 
         btn_weather = InlineKeyboardButton('Узнать погоду', callback_data='/weather')
         write_kb = InlineKeyboardMarkup().add(btn_news).add(btn_horo).add(btn_weather) \
-            .add(writeBtn).add(btn_fox).add(btn_cat).add(btn_quote).add(btn_eng_word)
+            .add(btn_fox).add(btn_cat).add(btn_quote).add(btn_eng_word).add(writeBtn)
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
             f'Alpha_test. ver. 2.0, date {date_change}', reply_markup=help_kb)

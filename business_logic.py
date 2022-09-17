@@ -5,6 +5,11 @@ from bs4 import BeautifulSoup
 
 
 def get_weather(city):
+    """
+    Запрос по API сервис погоды
+    :param city: строка, название города
+    :return: json с данными
+    """
     res = requests.get(
         f'http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=896831eabcb093f'
         f'c849059be7ffbff60&lang=ru')
@@ -13,6 +18,10 @@ def get_weather(city):
 
 
 def news():
+    """
+    Просто парсинг страницы с новостями Краснодарского края
+    :return: string
+    """
     news = ''
     url = 'https://news.mail.ru/tag/226/'
     req = requests.get(url).text
