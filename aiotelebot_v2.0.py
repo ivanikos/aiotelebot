@@ -54,12 +54,14 @@ async def help_command(message: types.Message):
         writeBtn = InlineKeyboardButton('Написать разработчику', url='telegram.me/ivanikos')
         btn_news = InlineKeyboardButton('Новости Краснодарского края', callback_data='/news_kk')
         btn_horo = InlineKeyboardButton('Узнать свой гороскоп', callback_data='/horo')
-        # btn_fox = InlineKeyboardButton('Тест картинки лис', callback_data='/fox')
-        # btn_cat = InlineKeyboardButton('Тест картинки котиков', callback_data='/cat')
+        btn_fox = InlineKeyboardButton('Фотку лисички', callback_data='/fox')
+        btn_cat = InlineKeyboardButton('Фотку котика', callback_data='/cat')
+        btn_quote = InlineKeyboardButton('Цитатку', callback_data='/quote')
+        btn_eng_word = InlineKeyboardButton('Случайное английское слово', callback_data='/eng_word')
 
         btn_weather = InlineKeyboardButton('Узнать погоду', callback_data='/weather')
         write_kb = InlineKeyboardMarkup().add(btn_news).add(btn_horo).add(btn_weather) \
-            .add(writeBtn)
+            .add(writeBtn).add(btn_fox).add(btn_cat).add(btn_quote).add(btn_eng_word)
         await message.answer('Пока что это все, что можно выбрать:', reply_markup=write_kb)
         await message.answer(
             f'Alpha_test. ver. 2.0, date {date_change}', reply_markup=help_kb)
@@ -80,9 +82,6 @@ async def help_command(message: types.Message):
 
     elif message.text == 'Donate':
         await message.answer('Просто кнопка, ничего не делает. Жми HELP.')
-        quote = business_logic.quote_all()
-        await bot.send_message(message.from_user.id, quote)
-        # await message.answer(f'Alpha_test. ver. 2.2, date {date_change}', reply_markup=help_kb)
     else:
         await message.answer('Не пойму чего ты хочешь, нажми кнопку Help.')
 
@@ -254,12 +253,12 @@ async def quote_budda_kris():
 
 async def evening_msg():
     greeting = 'Доброй ночи, Иван Александрович!\n\n'
-    quote = business_logic.quote_lao()
+    quote = business_logic.quote_all()
     await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
 
 async def evening_msg_kris():
     greeting = 'Доброй ночи, Кристиночка!\n\n'
-    quote = business_logic.quote_lao()
+    quote = business_logic.quote_all()
     await bot.send_message(kris_id, greeting + quote + '\n\n Лао-цзы')
 
 
