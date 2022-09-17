@@ -17,11 +17,15 @@ import business_logic
 class OrderCity(StatesGroup):
     wait_city = State()
     wait_sign = State()
+    wait_english = State()
+    wait_manual_word = State()
+
 
 date_change = datetime.date.today().strftime("%d.%m.%Y")
 # TOKEN = os.environ.get['TELETOKEN']
 
-bot = Bot(token='1265062548:AAFqYKSGzXqCmAANEPfEN02SGj69rs9PLPA')
+# bot = Bot(token='1265062548:AAFqYKSGzXqCmAANEPfEN02SGj69rs9PLPA')
+bot = Bot(token='5738154551:AAF8Ru5dVHE5bpx0mjEdc6orXFNCyvY4cec')
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
@@ -45,7 +49,7 @@ async def start_using(message: types.Message):
     else:
         await message.answer('Приветствую. Чтобы узнать что я умею нажми Help', reply_markup=help_kb)
         await bot.send_message(boss_id, f'Кто-то нажал старт user_id - {message.from_user.id}, \n'
-                                          f'user_name - {message.from_user.username}')
+                                        f'user_name - {message.from_user.username}')
 
 
 @dp.message_handler()
@@ -93,6 +97,12 @@ async def process_callback_news(callback_query: types.CallbackQuery):
                                           f'user name - {callback_query.from_user.username}')
     data_news = business_logic.news()
     await bot.send_message(callback_query.from_user.id, data_news, reply_markup=help_kb)
+
+
+@dp.callback_query_handler(lambda c: c.data == '/quote')
+async def process_callback_news(callback_query: types.CallbackQuery):
+    quote = business_logic.quote_all()
+    await bot.send_message(callback_query.from_user.id, quote, reply_markup=help_kb)
 
 
 @dp.callback_query_handler(lambda c: c.data == '/weather')
@@ -159,6 +169,49 @@ async def horo_answer(callback_query: types.CallbackQuery, state: FSMContext):
         await state.finish()
 
 
+# тест машины состояния на английские слова
+@dp.callback_query_handler(lambda c: c.data == '/eng_word')
+async def callback_eng_word(callback_query: types.CallbackQuery):
+    btn_random_word = InlineKeyboardButton('Случайное слово', callback_data='random')
+    btn_manual_word = InlineKeyboardButton('Напишу', callback_data='manual')
+
+    btn_cancel = InlineKeyboardButton('Отмена', callback_data='cancel')
+
+    horo_kb = InlineKeyboardMarkup(row_width=2).add(btn_random_word, btn_manual_word).add(btn_cancel)
+
+    await bot.send_message(callback_query.from_user.id, 'Хочешь узнать случайное слово или'
+                                                        'какое-то конкретное? \n', reply_markup=horo_kb)
+    await OrderCity.wait_english.set()
+
+
+@dp.callback_query_handler(state=OrderCity.wait_english)
+async def eng_word_answer(callback_query: types.CallbackQuery, state: FSMContext):
+    await state.update_data(answer=callback_query.data)
+    answer = await state.get_data()
+    if answer['answer'] == 'cancel':
+        await state.finish()
+        await bot.send_message(callback_query.from_user.id, 'Хорошо, попробуй что-нибудь другое.')
+    elif answer['answer'] == 'random':
+        word = business_logic.get_word().strip()
+        response = business_logic.english_words(word)
+        await bot.send_message(callback_query.from_user.id, response)
+        await state.finish()
+    elif answer['answer'] == 'manual':
+        await bot.send_message(callback_query.from_user.id, 'Напиши слово на английском и я постараюсь его перевести:')
+        await OrderCity.wait_manual_word.set()
+    else:
+        pass
+
+
+@dp.message_handler(state=OrderCity.wait_manual_word)
+async def eng_word_answer_manual(message: types.Message, state: FSMContext):
+    await state.update_data(answer=message.text)
+    answer = await state.get_data()
+    response = business_logic.english_words(answer['answer'])
+    await bot.send_message(message.from_user.id, response)
+    await state.finish()
+
+
 @dp.callback_query_handler(lambda c: c.data == '/fox')
 async def test_fox(callback_query: types.CallbackQuery):
     img_name = api_fox_img.load_fox_img()
@@ -195,11 +248,13 @@ async def send_fox_kris():
     await bot.send_photo(kris_id, img, reply_markup=help_kb)
     api_fox_img.delete_fox_img(f'{img_name}')
 
+
 async def send_cat_kris():
     img_name = api_fox_img.load_cat_img()
     img = open(f'{img_name}', 'rb')
     await bot.send_photo(kris_id, img, reply_markup=help_kb)
     api_fox_img.delete_cat_img(f'{img_name}')
+
 
 async def morning_msg():
     greeting = 'Доброго утра, Иван Александрович!\n\n'
@@ -215,6 +270,7 @@ async def morning_msg():
                 '\n\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
     await bot.send_message(boss_id, msg_final)
 
+
 async def morning_msg_kris():
     greeting = 'Доброго утра, Кристиночка!\n\n'
     data_weather = business_logic.get_weather('Свободный')
@@ -229,23 +285,32 @@ async def morning_msg_kris():
                 '\n\n' + '\nСвежие новости Краснодарского края:\n\n' + news_on_morning + '\n'
     await bot.send_message(kris_id, msg_final)
 
+
 async def quote_lao():
     quote = business_logic.quote_lao()
     await bot.send_message(boss_id, quote)
+
+
 async def quote_lao_kris():
     quote = business_logic.quote_lao()
     await bot.send_message(kris_id, quote)
 
+
 async def quote_all():
     quote = business_logic.quote_all()
     await bot.send_message(boss_id, quote)
+
+
 async def quote_all_kris():
     quote = business_logic.quote_all()
     await bot.send_message(kris_id, quote)
 
+
 async def quote_budda():
     quote = business_logic.quote_budda()
     await bot.send_message(boss_id, quote)
+
+
 async def quote_budda_kris():
     quote = business_logic.quote_budda()
     await bot.send_message(kris_id, quote)
@@ -256,15 +321,28 @@ async def evening_msg():
     quote = business_logic.quote_all()
     await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
 
+
 async def evening_msg_kris():
     greeting = 'Доброй ночи, Кристиночка!\n\n'
     quote = business_logic.quote_all()
     await bot.send_message(kris_id, greeting + quote + '\n\n Лао-цзы')
 
+async def random_eng_word_learn():
+    word = business_logic.get_word().strip()
+    response = business_logic.english_words(word)
+    await bot.send_message(boss_id, response)
+async def random_eng_word_learn_kris():
+    word = business_logic.get_word().strip()
+    response = business_logic.english_words(word)
+    await bot.send_message(kris_id, response)
+
 
 dp.register_message_handler(weather_answer, state=OrderCity.wait_city)
 dp.register_callback_query_handler(horo_answer, state=OrderCity.wait_sign)
 dp.register_callback_query_handler(callback_weather, state=OrderCity.wait_city)
+
+dp.register_callback_query_handler(eng_word_answer, state=OrderCity.wait_english)
+dp.register_callback_query_handler(eng_word_answer_manual, state=OrderCity.wait_manual_word)
 
 
 # Отправка сообщений по времени. Время МСК
@@ -274,8 +352,10 @@ async def scheduler():
     aioschedule.every().day.at("04:12").do(quote_budda)
     aioschedule.every().day.at("08:30").do(quote_all)
     aioschedule.every().day.at("06:00").do(send_fox)
+    aioschedule.every().day.at("06:10").do(random_eng_word_learn)
     aioschedule.every().day.at("10:00").do(send_cat)
     aioschedule.every().day.at("10:30").do(quote_all)
+    aioschedule.every().day.at("11:00").do(random_eng_word_learn)
     aioschedule.every().day.at("15:00").do(send_fox)
     aioschedule.every().day.at("19:30").do(evening_msg)
     aioschedule.every().day.at("19:32").do(send_cat)
@@ -283,15 +363,15 @@ async def scheduler():
     # Автосообщения Кристине
     aioschedule.every().day.at("01:00").do(morning_msg_kris)
     aioschedule.every().day.at("01:02").do(quote_budda_kris)
+    aioschedule.every().day.at("02:30").do(random_eng_word_learn_kris)
     aioschedule.every().day.at("03:00").do(send_fox_kris)
     aioschedule.every().day.at("06:30").do(send_cat_kris)
     aioschedule.every().day.at("09:00").do(quote_all_kris)
+    aioschedule.every().day.at("10:30").do(random_eng_word_learn_kris)
     aioschedule.every().day.at("11:30").do(send_fox_kris)
     aioschedule.every().day.at("16:30").do(evening_msg_kris)
     aioschedule.every().day.at("16:32").do(quote_budda_kris)
     aioschedule.every().day.at("16:31").do(send_cat_kris)
-
-
 
     while True:
         await aioschedule.run_pending()
