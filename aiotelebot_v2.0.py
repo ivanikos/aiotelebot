@@ -330,13 +330,13 @@ async def quote_budda_kris():
 async def evening_msg():
     greeting = 'Доброй ночи, Иван Александрович!\n\n'
     quote = business_logic.quote_all()
-    await bot.send_message(boss_id, greeting + quote + '\n\n Лао-цзы')
+    await bot.send_message(boss_id, greeting + quote)
 
 
 async def evening_msg_kris():
     greeting = 'Доброй ночи, Кристиночка!\n\n'
     quote = business_logic.quote_all()
-    await bot.send_message(kris_id, greeting + quote + '\n\n Лао-цзы')
+    await bot.send_message(kris_id, greeting + quote)
 
 async def random_eng_word_learn():
     word = business_logic.get_word().strip()
