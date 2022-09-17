@@ -370,6 +370,7 @@ async def scheduler():
     aioschedule.every().day.at("15:00").do(send_fox)
     aioschedule.every().day.at("19:30").do(evening_msg)
     aioschedule.every().day.at("19:32").do(send_cat)
+    aioschedule.every().day.at("19:33").do(random_eng_word_learn)
 
     # Автосообщения Кристине
     aioschedule.every().day.at("01:00").do(morning_msg_kris)
