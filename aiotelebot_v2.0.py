@@ -60,7 +60,7 @@ async def help_command(message: types.Message):
         btn_fox = InlineKeyboardButton('Фотку лисички', callback_data='/fox')
         btn_cat = InlineKeyboardButton('Фотку котика', callback_data='/cat')
         btn_quote = InlineKeyboardButton('Цитатку', callback_data='/quote')
-        btn_eng_word = InlineKeyboardButton('Случайное английское слово', callback_data='/eng_word')
+        btn_eng_word = InlineKeyboardButton('Английские слова', callback_data='/eng_word')
 
         btn_weather = InlineKeyboardButton('Узнать погоду', callback_data='/weather')
         write_kb = InlineKeyboardMarkup().add(btn_news).add(btn_horo).add(btn_weather) \
@@ -191,10 +191,16 @@ async def eng_word_answer(callback_query: types.CallbackQuery, state: FSMContext
         await state.finish()
         await bot.send_message(callback_query.from_user.id, 'Хорошо, попробуй что-нибудь другое.')
     elif answer['answer'] == 'random':
-        word = business_logic.get_word().strip()
-        response = business_logic.english_words(word)
-        await bot.send_message(callback_query.from_user.id, response)
-        await state.finish()
+        try:
+            word = business_logic.get_word().strip()
+            response = business_logic.english_words(word)
+            await bot.send_message(callback_query.from_user.id, response)
+            await state.finish()
+        except:
+            await bot.send_message(callback_query.from_user.id, 'Извини, что-то пошло не так, придётся попробовать '
+                                                                'еще раз')
+            await state.finish()
+
     elif answer['answer'] == 'manual':
         await bot.send_message(callback_query.from_user.id, 'Напиши слово на английском и я постараюсь его перевести:')
         await OrderCity.wait_manual_word.set()
@@ -206,9 +212,15 @@ async def eng_word_answer(callback_query: types.CallbackQuery, state: FSMContext
 async def eng_word_answer_manual(message: types.Message, state: FSMContext):
     await state.update_data(answer=message.text)
     answer = await state.get_data()
-    response = business_logic.english_words(answer['answer'])
-    await bot.send_message(message.from_user.id, response)
-    await state.finish()
+    try:
+        response = business_logic.english_words(answer['answer'])
+        await bot.send_message(message.from_user.id, response)
+        await state.finish()
+    except:
+        await bot.send_message(message.from_user.id, 'Извини, что-то пошло не так, придётся попробовать '
+                                                            'еще раз')
+        await state.finish()
+
 
 
 @dp.callback_query_handler(lambda c: c.data == '/fox')
