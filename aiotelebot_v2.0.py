@@ -269,7 +269,7 @@ async def send_cat_kris():
 
 async def morning_msg():
     greeting = 'Доброго утра, Иван Александрович!\n\n'
-    data_weather = business_logic.get_weather('надым')
+    data_weather = business_logic.get_weather('староминская')
     weather_msg = f"На улице температура {data_weather['main']['temp']} градусов," \
                   f" \n ощущается как {data_weather['main']['feels_like']}," \
                   f" \n {data_weather['weather'][0]['description']}," \
