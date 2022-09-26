@@ -356,7 +356,7 @@ dp.register_callback_query_handler(eng_word_answer, state=OrderCity.wait_english
 dp.register_callback_query_handler(eng_word_answer_manual, state=OrderCity.wait_manual_word)
 
 
-# Отправка сообщений по времени. Время МСК
+# Отправка сообщений по времени. Время МСК по москве
 async def scheduler():
     # Мои автосообщения
     aioschedule.every().day.at("06:10").do(morning_msg)
