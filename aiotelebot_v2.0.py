@@ -359,18 +359,18 @@ dp.register_callback_query_handler(eng_word_answer_manual, state=OrderCity.wait_
 # Отправка сообщений по времени. Время МСК
 async def scheduler():
     # Мои автосообщения
-    aioschedule.every().day.at("04:10").do(morning_msg)
-    aioschedule.every().day.at("04:12").do(quote_budda)
-    aioschedule.every().day.at("08:30").do(quote_all)
-    aioschedule.every().day.at("06:00").do(send_fox)
-    aioschedule.every().day.at("06:10").do(random_eng_word_learn)
-    aioschedule.every().day.at("10:00").do(send_cat)
-    aioschedule.every().day.at("10:30").do(quote_all)
-    aioschedule.every().day.at("11:00").do(random_eng_word_learn)
-    aioschedule.every().day.at("15:00").do(send_fox)
-    aioschedule.every().day.at("19:30").do(evening_msg)
-    aioschedule.every().day.at("19:32").do(send_cat)
-    aioschedule.every().day.at("19:33").do(random_eng_word_learn)
+    aioschedule.every().day.at("00:10").do(morning_msg)
+    aioschedule.every().day.at("00:12").do(quote_budda)
+    aioschedule.every().day.at("04:30").do(quote_all)
+    aioschedule.every().day.at("02:00").do(send_fox)
+    aioschedule.every().day.at("02:10").do(random_eng_word_learn)
+    aioschedule.every().day.at("06:00").do(send_cat)
+    aioschedule.every().day.at("06:30").do(quote_all)
+    aioschedule.every().day.at("07:00").do(random_eng_word_learn)
+    aioschedule.every().day.at("11:00").do(send_fox)
+    aioschedule.every().day.at("15:30").do(evening_msg)
+    aioschedule.every().day.at("15:32").do(send_cat)
+    aioschedule.every().day.at("15:33").do(random_eng_word_learn)
 
     # Автосообщения Кристине
     aioschedule.every().day.at("01:00").do(morning_msg_kris)
