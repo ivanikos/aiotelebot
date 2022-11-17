@@ -373,17 +373,17 @@ async def scheduler():
     aioschedule.every().day.at("15:33").do(random_eng_word_learn)
 
     # Автосообщения Кристине
-    aioschedule.every().day.at("01:00").do(morning_msg_kris)
-    aioschedule.every().day.at("01:02").do(quote_budda_kris)
-    aioschedule.every().day.at("02:30").do(random_eng_word_learn_kris)
-    aioschedule.every().day.at("03:00").do(send_fox_kris)
-    aioschedule.every().day.at("06:30").do(send_cat_kris)
-    aioschedule.every().day.at("09:00").do(quote_all_kris)
-    aioschedule.every().day.at("10:30").do(random_eng_word_learn_kris)
-    aioschedule.every().day.at("11:30").do(send_fox_kris)
-    aioschedule.every().day.at("16:30").do(evening_msg_kris)
-    aioschedule.every().day.at("16:32").do(quote_budda_kris)
-    aioschedule.every().day.at("16:31").do(send_cat_kris)
+    aioschedule.every().day.at("07:00").do(morning_msg_kris)
+    aioschedule.every().day.at("07:02").do(quote_budda_kris)
+    aioschedule.every().day.at("08:30").do(random_eng_word_learn_kris)
+    aioschedule.every().day.at("09:00").do(send_fox_kris)
+    aioschedule.every().day.at("12:30").do(send_cat_kris)
+    aioschedule.every().day.at("15:00").do(quote_all_kris)
+    aioschedule.every().day.at("16:30").do(random_eng_word_learn_kris)
+    aioschedule.every().day.at("17:30").do(send_fox_kris)
+    aioschedule.every().day.at("22:30").do(evening_msg_kris)
+    aioschedule.every().day.at("22:32").do(quote_budda_kris)
+    aioschedule.every().day.at("22:31").do(send_cat_kris)
 
     while True:
         await aioschedule.run_pending()
