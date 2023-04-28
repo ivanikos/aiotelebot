@@ -22,9 +22,10 @@ class OrderCity(StatesGroup):
 
 
 date_change = datetime.date.today().strftime("%d.%m.%Y")
-# TOKEN = os.environ.get['TELETOKEN']
 
-bot = Bot(token='1265062548:AAFqYKSGzXqCmAANEPfEN02SGj69rs9PLPA')
+TOKEN = os.environ['TELEBOT_TOKEN']
+
+bot = Bot(token=TOKEN)
 
 dp: Dispatcher = Dispatcher(bot, storage=MemoryStorage())
 
