@@ -415,8 +415,6 @@ async def scheduler():
     aioschedule.every().day.at("22:31").do(send_cat_kris)
 
 
-
-
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
